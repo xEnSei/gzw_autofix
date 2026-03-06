@@ -27,23 +27,6 @@ PROTON_ENABLE_NVAPI=1 ~/gscript/gzw_autofix.sh gamemoderun mangohud obs-vkcaptur
 
 ---
 
-## ⚙️ How it works
-
-```
-Game start
-    │
-    ├─ Steam build ID changed? ──► YES → Refresh backup from new game files
-    │
-    └─ NO → Verify backup via SHA256
-                │
-                ├─ OK      → Restore clean file → Launch game
-                └─ CORRUPT → Warn user, skip restore → Launch game
-                                        │
-                                        └─ After exit: sync buffers to disk
-```
-
----
-
 ## ⚠️ Disclaimer
 
 This script is provided **as-is**, without any warranty of any kind.
