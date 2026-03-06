@@ -1,2 +1,1 @@
-# gzw_autofix
-Steam launch wrapper for Gray Zone Warfare on Linux/Proton that automatically backs up and restores cache files corrupted during game shutdown, with Steam build ID detection to handle game updates gracefully.
+A Steam launch script for Gray Zone Warfare (Linux/Proton) that prevents cache file corruption caused by incomplete writes during game shutdown. Automatically restores clean backups before each launch, validates backup integrity via SHA256, and detects game updates via Steam's appmanifest build ID — so backups are refreshed after updates instead of blindly overwritten.
