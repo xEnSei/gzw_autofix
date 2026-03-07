@@ -1,10 +1,12 @@
 #!/bin/bash
 
-TARGET_DIR="/mnt/ssd1tb/SteamLibrary/steamapps/common/Gray Zone Warfare/GZW/Content/SKALLA/PrebuildWorldData/World/cache/"
+: "${STEAM_COMPAT_INSTALL_PATH:?STEAM_COMPAT_INSTALL_PATH is not set}"
+
+TARGET_DIR="${STEAM_COMPAT_INSTALL_PATH}/GZW/Content/SKALLA/PrebuildWorldData/World/cache/"
 FILES=("0xaf497c273f87b6e4_0x7a22fc105639587d.dat" "0xb9af63cee2e43b6c_0x3cb3b3354fb31606.dat")
 
 CHECKSUM_FILE="${TARGET_DIR}.clean_checksums"
-MANIFEST="/mnt/ssd1tb/SteamLibrary/steamapps/appmanifest_2479810.acf"
+MANIFEST="${STEAM_COMPAT_INSTALL_PATH}/../../appmanifest_2479810.acf"
 VERSION_FILE="${TARGET_DIR}.last_known_buildid"
 
 # FIX: Check if manifest exists before reading it
