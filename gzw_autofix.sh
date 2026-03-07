@@ -1,13 +1,70 @@
 #!/bin/bash
 
-TARGET_DIR="/mnt/ssd1tb/SteamLibrary/steamapps/common/Gray Zone Warfare/GZW/Content/SKALLA/PrebuildWorldData/World/cache/"
+# ─── Auto-detect Steam library containing Gray Zone Warfare ───────────────────
+
+GAME_SUBPATH="steamapps/common/Gray Zone Warfare/GZW/Content/SKALLA/PrebuildWorldData/World/cache"
+MANIFEST_NAME="appmanifest_2479810.acf"
+
+# Common Steam library locations
+STEAM_CANDIDATES=(
+    "$HOME/.steam/steam"
+    "$HOME/.local/share/Steam"
+    "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam"  # Flatpak
+)
+
+# Also check libraryfolders.vdf for additional Steam library paths
+LIBRARYFOLDER_CANDIDATES=()
+for BASE in "${STEAM_CANDIDATES[@]}"; do
+    VDF="$BASE/steamapps/libraryfolders.vdf"
+    if [ -f "$VDF" ]; then
+        # Extract all "path" entries from libraryfolders.vdf
+        while IFS= read -r line; do
+            PATH_VAL=$(echo "$line" | grep -oP '(?<="path"\s{1,10}")([^"]+)')
+            if [ -n "$PATH_VAL" ]; then
+                LIBRARYFOLDER_CANDIDATES+=("$PATH_VAL")
+            fi
+        done < "$VDF"
+    fi
+done
+
+# Merge all candidates
+ALL_CANDIDATES=("${STEAM_CANDIDATES[@]}" "${LIBRARYFOLDER_CANDIDATES[@]}")
+
+# Find the actual library containing GZW
+TARGET_DIR=""
+MANIFEST=""
+for CANDIDATE in "${ALL_CANDIDATES[@]}"; do
+    if [ -d "$CANDIDATE/steamapps/$GAME_SUBPATH" ] 2>/dev/null || \
+       [ -d "$CANDIDATE/$GAME_SUBPATH" ] 2>/dev/null; then
+
+        # Determine correct base
+        if [ -d "$CANDIDATE/steamapps/$GAME_SUBPATH" ]; then
+            TARGET_DIR="$CANDIDATE/steamapps/$GAME_SUBPATH/"
+            MANIFEST="$CANDIDATE/steamapps/$MANIFEST_NAME"
+        else
+            TARGET_DIR="$CANDIDATE/$GAME_SUBPATH/"
+            MANIFEST="$CANDIDATE/steamapps/$MANIFEST_NAME"
+        fi
+        break
+    fi
+done
+
+if [ -z "$TARGET_DIR" ]; then
+    echo "ERROR: Gray Zone Warfare installation not found."
+    echo "       Searched in: ${ALL_CANDIDATES[*]}"
+    exit 1
+fi
+
+echo "Found GZW at: $TARGET_DIR"
+
+# ─── Main logic ───────────────────────────────────────────────────────────────
+
 FILES=("0xaf497c273f87b6e4_0x7a22fc105639587d.dat" "0xb9af63cee2e43b6c_0x3cb3b3354fb31606.dat")
 
 CHECKSUM_FILE="${TARGET_DIR}.clean_checksums"
-MANIFEST="/mnt/ssd1tb/SteamLibrary/steamapps/appmanifest_2479810.acf"
 VERSION_FILE="${TARGET_DIR}.last_known_buildid"
 
-# FIX: Check if manifest exists before reading it
+# Check if manifest exists
 if [ ! -f "$MANIFEST" ]; then
     echo "ERROR: Steam manifest not found at $MANIFEST — aborting."
     exit 1
@@ -33,7 +90,6 @@ for FILE in "${FILES[@]}"; do
     FULL_PATH="${TARGET_DIR}${FILE}"
     BACKUP_PATH="${FULL_PATH}.clean"
 
-    # Check if source file exists at all
     if [ ! -f "$FULL_PATH" ]; then
         echo "WARNING: Game file not found: $FULL_PATH — skipping."
         continue
@@ -42,17 +98,14 @@ for FILE in "${FILES[@]}"; do
     if [ ! -f "$BACKUP_PATH" ] || [ "$UPDATE_DETECTED" = true ]; then
         cp "$FULL_PATH" "$BACKUP_PATH" || { echo "ERROR: Backup copy failed for $FILE"; continue; }
 
-        # FIX: Use -F (fixed string) to avoid regex dot-wildcard bug
-        # FIX: Rebuild checksum file cleanly to avoid duplicate entries
         grep -vF "$FILE.clean" "$CHECKSUM_FILE" > "${CHECKSUM_FILE}.tmp" 2>/dev/null
         sha256sum "$BACKUP_PATH" >> "${CHECKSUM_FILE}.tmp"
         mv "${CHECKSUM_FILE}.tmp" "$CHECKSUM_FILE"
 
         echo "Backup created/updated for $FILE (BuildID: $CURRENT_BUILDID)"
-        continue  # File is fresh from Steam, no restore needed
+        continue
     fi
 
-    # FIX: Use -F (fixed string) and -m1 (max 1 match) to avoid duplicate-entry issues
     EXPECTED=$(grep -F "$FILE.clean" "$CHECKSUM_FILE" | head -n1 | awk '{print $1}')
     ACTUAL=$(sha256sum "$BACKUP_PATH" | awk '{print $1}')
 
@@ -69,7 +122,6 @@ for FILE in "${FILES[@]}"; do
         continue
     fi
 
-    # Restore clean file before game starts
     cp "$BACKUP_PATH" "$FULL_PATH" || { echo "ERROR: Restore failed for $FILE"; continue; }
     echo "Restored clean version of $FILE"
 done
@@ -77,7 +129,7 @@ done
 # Save current build ID for next launch
 echo "$CURRENT_BUILDID" > "$VERSION_FILE"
 
-# Launch game with all passed arguments
+# Launch game
 "$@"
 
 # Flush write buffers after game exits
