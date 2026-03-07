@@ -2,7 +2,8 @@
 
 # ─── Auto-detect Steam library containing Gray Zone Warfare ───────────────────
 
-GAME_SUBPATH="steamapps/common/Gray Zone Warfare/GZW/Content/SKALLA/PrebuildWorldData/World/cache"
+# FIX: GAME_SUBPATH must NOT start with steamapps/ — that is appended separately
+GAME_SUBPATH="common/Gray Zone Warfare/GZW/Content/SKALLA/PrebuildWorldData/World/cache"
 MANIFEST_NAME="appmanifest_2479810.acf"
 
 # Common Steam library locations
@@ -12,39 +13,38 @@ STEAM_CANDIDATES=(
     "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam"  # Flatpak
 )
 
-# Also check libraryfolders.vdf for additional Steam library paths
+# FIX: Deduplicate candidates by resolving symlinks before comparing
+declare -A SEEN_VDFS
 LIBRARYFOLDER_CANDIDATES=()
 for BASE in "${STEAM_CANDIDATES[@]}"; do
     VDF="$BASE/steamapps/libraryfolders.vdf"
-    if [ -f "$VDF" ]; then
-        # Extract all "path" entries from libraryfolders.vdf
-        while IFS= read -r line; do
-            PATH_VAL=$(echo "$line" | grep -oP '(?<="path"\s{1,10}")([^"]+)')
-            if [ -n "$PATH_VAL" ]; then
-                LIBRARYFOLDER_CANDIDATES+=("$PATH_VAL")
-            fi
-        done < "$VDF"
-    fi
+    [ ! -f "$VDF" ] && continue
+
+    # FIX: Resolve symlinks to avoid parsing the same VDF twice
+    REAL_VDF=$(realpath "$VDF" 2>/dev/null || echo "$VDF")
+    [ "${SEEN_VDFS[$REAL_VDF]+set}" = "set" ] && continue
+    SEEN_VDFS["$REAL_VDF"]=1
+
+    # FIX: Use awk instead of grep -oP (no PCRE dependency)
+    while IFS= read -r line; do
+        PATH_VAL=$(echo "$line" | awk -F'"' '/"path"/{print $4}')
+        if [ -n "$PATH_VAL" ]; then
+            LIBRARYFOLDER_CANDIDATES+=("$PATH_VAL")
+        fi
+    done < "$VDF"
 done
 
 # Merge all candidates
 ALL_CANDIDATES=("${STEAM_CANDIDATES[@]}" "${LIBRARYFOLDER_CANDIDATES[@]}")
 
 # Find the actual library containing GZW
+# FIX: Only one check needed — $CANDIDATE/steamapps/$GAME_SUBPATH is always the correct structure
 TARGET_DIR=""
 MANIFEST=""
 for CANDIDATE in "${ALL_CANDIDATES[@]}"; do
-    if [ -d "$CANDIDATE/steamapps/$GAME_SUBPATH" ] 2>/dev/null || \
-       [ -d "$CANDIDATE/$GAME_SUBPATH" ] 2>/dev/null; then
-
-        # Determine correct base
-        if [ -d "$CANDIDATE/steamapps/$GAME_SUBPATH" ]; then
-            TARGET_DIR="$CANDIDATE/steamapps/$GAME_SUBPATH/"
-            MANIFEST="$CANDIDATE/steamapps/$MANIFEST_NAME"
-        else
-            TARGET_DIR="$CANDIDATE/$GAME_SUBPATH/"
-            MANIFEST="$CANDIDATE/steamapps/$MANIFEST_NAME"
-        fi
+    if [ -d "$CANDIDATE/steamapps/$GAME_SUBPATH" ]; then
+        TARGET_DIR="$CANDIDATE/steamapps/$GAME_SUBPATH/"
+        MANIFEST="$CANDIDATE/steamapps/$MANIFEST_NAME"
         break
     fi
 done
