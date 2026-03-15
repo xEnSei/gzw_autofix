@@ -9,16 +9,30 @@ corruption caused by incomplete writes during game shutdown.
 - Validates backup integrity via SHA256 before trusting it
 - Reads Steam's `appmanifest` build ID to detect game updates and refresh backups automatically
 
-## Usage
+## Requirements
 
-Steam launch options:
+- Linux with Proton
+- `libnotify` (for desktop notifications — `sudo pacman -S libnotify` on Arch-based distros)
 
-**First**, have Steam re-verify the files, then paste the script as described below, In the game's launch options!!!
+## Installation
+
+1. Have Steam re-verify the game files via *Properties → Local Files → Verify integrity*
+2. Download the script and make it executable:
+
+```bash
+mkdir -p ~/gscript
+curl -o ~/gscript/gzw_autofix.sh https://raw.githubusercontent.com/xEnSei/gzw_autofix/main/gzw_autofix.sh
+chmod +x ~/gscript/gzw_autofix.sh
+```
+
+3. Set the Steam launch options for Gray Zone Warfare:
+
 ```
 ~/gscript/gzw_autofix.sh %command%
 ```
 
 Example with additional tools:
+
 ```
 PROTON_ENABLE_NVAPI=1 ~/gscript/gzw_autofix.sh gamemoderun mangohud obs-vkcapture %command%
 ```
