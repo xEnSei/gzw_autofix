@@ -12,8 +12,7 @@ corruption caused by incomplete writes during game shutdown.
 ## Requirements
 
 - `libnotify` (for desktop notifications — `sudo pacman -S libnotify` on Arch-based distros)
-
-## Installation
+  `libnotify` is optional — if not installed, all output is always written to the file `gzw_autofix.log` in the script directory.
 
 1. Have Steam re-verify the game files via *Properties → Local Files → Verify integrity*
 2. Download the script and make it executable:
