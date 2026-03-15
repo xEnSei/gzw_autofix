@@ -12,6 +12,8 @@ corruption caused by incomplete writes during game shutdown.
 ## Usage
 
 Steam launch options:
+
+**First**, have Steam re-verify the files, then paste the script as described below, In the game's launch options!!!
 ```
 ~/gscript/gzw_autofix.sh %command%
 ```
