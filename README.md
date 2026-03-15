@@ -11,7 +11,6 @@ corruption caused by incomplete writes during game shutdown.
 
 ## Requirements
 
-- Linux with Proton
 - `libnotify` (for desktop notifications — `sudo pacman -S libnotify` on Arch-based distros)
 
 ## Installation
