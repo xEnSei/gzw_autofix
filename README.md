@@ -11,8 +11,9 @@ corruption caused by incomplete writes during game shutdown.
 
 ## Requirements
 
-- `libnotify` (for desktop notifications — `sudo pacman -S libnotify` on Arch-based distros)
-  `libnotify` is optional — if not installed, all output is always written to the file `gzw_autofix.log` in the script directory.
+- `libnotify` optional — if not installed, all output is written to `gzw_autofix.log` in the script directory (`sudo pacman -S libnotify` on Arch-based distros)
+
+## Installation
 
 1. Have Steam re-verify the game files via *Properties → Local Files → Verify integrity*
 2. Download the script and make it executable:
@@ -35,10 +36,27 @@ Example with additional tools:
 PROTON_ENABLE_NVAPI=1 ~/gscript/gzw_autofix.sh gamemoderun mangohud obs-vkcapture %command%
 ```
 
+## Files
+
+**Placed by the user:**
+- `~/gscript/gzw_autofix.sh` — the script
+
+**Created by the script:**
+- `~/gscript/gzw_autofix.log` — log file (recreated on every launch)
+- `<cache>/.last_known_buildid` — last known Steam build ID
+- `<cache>/.clean_checksums` — SHA256 checksums of the backup files
+- `<cache>/0xaf497c273f87b6e4_0x7a22fc105639587d.dat.clean` — backup of cache file 1
+- `<cache>/0xb9af63cee2e43b6c_0x3cb3b3354fb31606.dat.clean` — backup of cache file 2
+
+Where `<cache>` expands to:
+```
+<Steam library>/steamapps/common/Gray Zone Warfare/GZW/Content/SKALLA/PrebuildWorldData/World/cache/
+```
+
 ## Logging
 
-Errors and warnings are shown as desktop notifications via `notify-send`.  
-Full log per session: `/tmp/gzw_autofix.log`
+Errors and warnings are shown as desktop notifications via `notify-send`.
+Full log per session: `~/gscript/gzw_autofix.log`
 
 ## Disclaimer
 
