@@ -42,7 +42,7 @@ PROTON_ENABLE_NVAPI=1 ~/gscript/gzw_autofix.sh gamemoderun mangohud obs-vkcaptur
 - `~/gscript/gzw_autofix.sh` — the script
 
 **Created by the script:**
-- `~/gscript/gzw_autofix.log` — log file (recreated on every launch)
+- `~/gscript/gzw_autofix.log` — log file (appended on every launch, capped at 100 lines by default)
 - `<cache>/.last_known_buildid` — last known Steam build ID
 - `<cache>/.clean_checksums` — SHA256 checksums of the backup files
 - `<cache>/0xaf497c273f87b6e4_0x7a22fc105639587d.dat.clean` — backup of cache file 1
@@ -55,8 +55,15 @@ Where `<cache>` expands to:
 
 ## Logging
 
-Errors and warnings are shown as desktop notifications via `notify-send`.
-Full log per session: `~/gscript/gzw_autofix.log`
+Each run is appended to `~/gscript/gzw_autofix.log` and separated by a timestamped header.
+Desktop notifications are shown via `notify-send` if installed.
+
+Two options can be configured at the top of the script:
+
+| Option | Default | Description |
+|---|---|---|
+| `NOTIFY` | `true` | Set to `false` to disable desktop notifications |
+| `LOG_MAX_LINES` | `100` | Maximum number of lines retained in the log file |
 
 ## Disclaimer
 
