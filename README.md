@@ -62,7 +62,7 @@ Two options can be configured at the top of the script:
 
 | Option | Default | Description |
 |---|---|---|
-| `NOTIFY` | `true` | Set to `false` to disable desktop notifications |
+| `NOTIFY` | `false` | Set to `true` to disable desktop notifications |
 | `LOG_MAX_LINES` | `100` | Maximum number of lines retained in the log file |
 
 ## Disclaimer
