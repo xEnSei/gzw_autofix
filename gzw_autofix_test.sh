@@ -120,10 +120,10 @@ _read_game_state() {
 
     local depot_manifests
     depot_manifests=$(awk '
-        /\"InstalledDepots\"/ { in_depots=1; depth=0; next }
-        in_depots && /\{/     { depth++ }
-        in_depots && /\}/     { depth--; if (depth < 0) in_depots=0 }
-        in_depots && /\"manifest\"/ {
+        /"InstalledDepots"/ { in_depots=1; depth=0; next }
+        in_depots && /\{/   { depth++ }
+        in_depots && /\}/   { depth--; if (depth < 0) in_depots=0 }
+        in_depots && /"manifest"/ {
             gsub(/"/, "")
             print $2
         }
