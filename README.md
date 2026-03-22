@@ -33,7 +33,7 @@ chmod +x ~/gscript/gzw_autofix.sh
 Example with additional tools:
 
 ```
-PROTON_ENABLE_NVAPI=1 ~/gscript/gzw_autofix.sh gamemoderun mangohud obs-vkcapture %command%
+PROTON_ENABLE_NVAPI=1 ~/gscript/gzw_autofix.sh mangohud obs-vkcapture %command%
 ```
 
 ## Files
