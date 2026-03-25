@@ -1,16 +1,5 @@
-## gzw_autofix_test.sh (experimental)
-
-A revised version of the script currently under testing. Changes over the stable version:
-
-**Improved update detection**
-The stable script detects updates via the `buildid` field in the Steam ACF manifest. Valve does not increment `buildid` on every depot-level change, so stealth fixes (new file content, same build tag) go undetected.
-
-The test version additionally reads all depot manifest IDs from the `InstalledDepots` block of the ACF and combines them into a single state string (`buildid:manifestA:manifestB:...`). Depot manifests change on every content update regardless of the build tag.
-
 **State file rename**
 `.last_known_buildid` → `.last_known_state`. The format is incompatible with the old file; the first run initializes a new baseline automatically. The old file does not need to be deleted.
-
-Try it at your own risk.
 
 # GZW Cache Autofix
 
