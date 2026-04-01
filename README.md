@@ -1,6 +1,3 @@
-# Update
-Renamed gzw_autofix.sh to gzw_autofix_old.sh
-
 ## The new gzw_autofix.sh
 **Improved update detection**
 The new script detects updates via the `buildid` field in the Steam ACF manifest. Valve does not increment `buildid` on every depot-level change, so stealth fixes (new file content, same build tag) go undetected.
@@ -14,6 +11,7 @@ The new version additionally reads all depot manifest IDs from the `InstalledDep
 
 Steam launch script for Gray Zone Warfare (Linux/Proton) that prevents cache file
 corruption caused by incomplete writes during game shutdown.
+You can also run the script normally in the console and see if it detects everything correctly; just check the log file later.
 
 ## What it does
 
