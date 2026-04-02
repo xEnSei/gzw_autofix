@@ -31,7 +31,7 @@ chmod +x ~/gscript/gzw_autofix.sh
 ~/gscript/gzw_autofix.sh %command%
 ```
 
-Example with additional tools:
+Example:
 
 ```
 PROTON_ENABLE_NVAPI=1 ~/gscript/gzw_autofix.sh mangohud obs-vkcapture %command%
