@@ -12,7 +12,7 @@ You can also run the script manually in the console and verify detection via the
 
 ## Requirements
 
-- `libnotify` optional — if not installed, all output is written to `gzw_autofix.log` in the script directory (`sudo pacman -S libnotify` on Arch-based distros)
+- `libnotify` optional — if not installed, all output is also written to `gzw_autofix.log` in the script directory (`sudo pacman -S libnotify` on Arch-based distros)
 
 ## Installation
 
