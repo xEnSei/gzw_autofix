@@ -4,7 +4,7 @@ set -uo pipefail
 # ─── Config ───────────────────────────────────────────────────────────────────
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-CONFIG_FILE="$SCRIPT_DIR/gzw_autofix.conf"
+CONFIG_FILE="$SCRIPT_DIR/gzw_fix.conf"
 
 if [ ! -f "$CONFIG_FILE" ]; then
     echo "[ERROR] Config file not found: $CONFIG_FILE" >&2
@@ -18,7 +18,7 @@ TARGET_DIR=""
 MANIFEST=""
 FILES=()
 
-# shellcheck source=gzw_autofix.conf
+# shellcheck source=gzw_fix.conf
 source "$CONFIG_FILE"
 
 # ─── Config validation ────────────────────────────────────────────────────────
@@ -47,14 +47,14 @@ TARGET_DIR="${TARGET_DIR%/}/"
 
 # ─── Logging / Notification ───────────────────────────────────────────────────
 
-LOG_FILE="$SCRIPT_DIR/gzw_autofix.log"
+LOG_FILE="$SCRIPT_DIR/gzw_fix.log"
 
 _ts() { date "+%Y-%m-%d %H:%M:%S"; }
 
 {
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  GZW Autofix — $(_ts)"
+    echo "  GZW Fix — $(_ts)"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 } >> "$LOG_FILE"
 
@@ -69,7 +69,7 @@ log_info() {
     local msg="$1"
     echo "[$(_ts)] [INFO]  $msg" >> "$LOG_FILE"
     if [ "$NOTIFY" = true ]; then
-        notify-send -a "GZW Autofix" -i dialog-information "GZW Autofix" "$msg" 2>/dev/null || true
+        notify-send -a "GZW Fix" -i dialog-information "GZW Fix" "$msg" 2>/dev/null || true
     fi
 }
 
@@ -77,7 +77,7 @@ log_warn() {
     local msg="$1"
     echo "[$(_ts)] [WARN]  $msg" >> "$LOG_FILE"
     if [ "$NOTIFY" = true ]; then
-        notify-send -a "GZW Autofix" -i dialog-warning -u normal "GZW Autofix – Warning" "$msg" 2>/dev/null || true
+        notify-send -a "GZW Fix" -i dialog-warning -u normal "GZW Fix – Warning" "$msg" 2>/dev/null || true
     fi
 }
 
@@ -85,7 +85,7 @@ log_error() {
     local msg="$1"
     echo "[$(_ts)] [ERROR] $msg" >> "$LOG_FILE"
     if [ "$NOTIFY" = true ]; then
-        notify-send -a "GZW Autofix" -i dialog-error -u critical "GZW Autofix – Error" "$msg" 2>/dev/null || true
+        notify-send -a "GZW Fix" -i dialog-error -u critical "GZW Fix – Error" "$msg" 2>/dev/null || true
     fi
 }
 
