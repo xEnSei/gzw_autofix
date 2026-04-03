@@ -1,6 +1,6 @@
 Here's how to set it up from scratch:
 
-1. Clean up old files
+**1. Clean up old files**
 
 Delete this files:
 ```
