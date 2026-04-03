@@ -31,11 +31,28 @@ chmod +x ~/gscript/gzw_autofix.sh
 ~/gscript/gzw_autofix.sh %command%
 ```
 
-Example:
+**Launch option order matters** — here's the structure:
 
+```
+[env vars] ~/gscript/gzw_autofix.sh [wrappers] %command%
+```
+
+**Environment variables** go first, before the script:
+```
+PROTON_ENABLE_NVAPI=1 ~/gscript/gzw_autofix.sh %command%
+```
+
+**Wrappers** like `mangohud` or `obs-vkcapture` go between the script and `%command%`:
+```
+~/gscript/gzw_autofix.sh mangohud obs-vkcapture %command%
+```
+
+**Combined example:**
 ```
 PROTON_ENABLE_NVAPI=1 ~/gscript/gzw_autofix.sh mangohud obs-vkcapture %command%
 ```
+
+`%command%` is always last — it represents the actual game executable. The script passes everything after itself directly to the game, so the order is strict.
 
 ## Files
 
