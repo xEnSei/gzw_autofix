@@ -54,6 +54,17 @@ PROTON_ENABLE_NVAPI=1 ~/gscript/gzw_autofix.sh mangohud obs-vkcapture %command%
 
 `%command%` is always last — it represents the actual game executable. The script passes everything after itself directly to the game, so the order is strict.
 
+## Test the script
+Before launching the game, run the script once directly in the terminal:
+```
+~/gscript/gzw_autofix.sh
+```
+Then check the log:
+```
+cat ~/gscript/gzw_autofix.log
+```
+If you see `Backup created: ...` and no `ERROR`, everything is set up correctly.
+
 ## Files
 
 **Placed by the user:**
