@@ -4,7 +4,7 @@ Here's how to set it up from scratch:
 
 Delete this files:
 ```
-<cache>/.last_known_buildid — last known Steam build ID
+<cache>/.last_known_state — last known Steam build ID
 <cache>/.clean_checksums — SHA256 checksums of the backup files
 <cache>/0xaf497c273f87b6e4_0x7a22fc105639587d.dat.clean — backup of cache file 1
 <cache>/0xb9af63cee2e43b6c_0x3cb3b3354fb31606.dat.clean — backup of cache file 2
